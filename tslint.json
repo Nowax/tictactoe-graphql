@@ -13,7 +13,6 @@
     "object-literal-sort-keys": false,
     "quotemark": [true, "single", "avoid-escape"],
     "object-literal-key-quotes": [true, "as-needed"],
-    "react-hooks-nesting": "error",
     "semicolon": [true, "never"],
     "no-namespace": [true, "allow-declarations"],
     "trailing-comma": [
