@@ -1,10 +1,66 @@
+# Abstract
+
+`Tic-Tac-Toe` application is a project which shows some simple usage of GraphQL in node.js apps.
+
+## Usage
+
+To run app locally:
+
+```bash
+npm run dev
+```
+
+In development mode there is enabled GraphQL's playground UI from which you can get information about schema. After starting the application locally, visit `http://localhost:3000/graphql` to reach it.
+
+# Design
+
+## Application structure
+
+App has been structured to separate different part of functionality in modules. The most crucial modularization is connected with GraphQL schema. It was done based on suggestion from apollo team and the whole explanation can be reached [here](https://www.apollographql.com/blog/modularizing-your-graphql-schema-code-d7f71d5ed5f2).
+
+## Schema
+
+Design schema the "schema first" approach has been selected. Schema's models must be defined as separate schema's shard (using `gql` tags) and based on that typedefs and actual schema files are generated.
+
+To generate typedefs you need to first start application:
+
+```bash
+npm run dev
+```
+
+Then you can call command:
+
+```bash
+npm run generate-typedefs
+```
+
+which is equivalent to:
+
+```bash
+npx graphql-cli get-schema && graphql-schema-typescript --namespace=GQL --global=true --typePrefix='' generate-ts --output=src/__typedefs/graphqlTypes.d.ts src/__typedefs
+```
+
+It basically retrieves schema from graphql server and saves it to predefined place (`get-schema` part). Then based on retrieved schema it generated typedefs (`graphql-schema-typescript` part).
+
+Predefined configuration can be reached from file: `.graphqlconfig`
+
+## Authentication
+
+There is no authentication integrated with the app (even simple dummy token checks). Reason: this approach simplifies app design.
+
+## Database
+
+For development purpose `lowdb` databases has been used. This allow to create databases in json file. Database has got abstract interface so in production environment `lowdb` can be easily change to some more sophisticated solution.
+
+# Configuration
+
 ## Linters
 
-For linting purposes there is used `tslint` library. Whole configuration can be accessed from `tslint.json`. Rules for linter are defined explictely (no common rules standard has been used such as air-bnb or so). Tslint validation is part of precommit hook.
+For linting purposes there is used `tslint` library. Whole configuration can be accessed from `tslint.json`. Rules for linter are defined explicitly (no common rules standard has been used such as air-bnb or so). Tslint validation is part of precommit hook.
 
 ## Style
 
-For styling purposes there is used `prettier` library. Whole configuration can be accessed from `.prettierrc` file. Prettier can be connected with auto-formart feature of many IDEs (recommneded). Prettier is also called as a hook command as a precommit.
+For styling purposes there is used `prettier` library. Whole configuration can be accessed from `.prettierrc` file. Prettier can be connected with auto-format feature of many IDEs (recommended). Prettier is also called as a hook command as a precommit.
 
 ## Logging
 
@@ -12,6 +68,6 @@ For logging purposes there is used `pino` library. By default it set to `DEBUG` 
 
 To log graphQL debug information from apollo-server itself, special basic logging extension has been implemented (see: `ApolloBasicLogging`).
 
-For dev enviroment there is also installed `pino-prettier` which make easier to read provided logs. `pina-colada` prints less information from express server so in some cases it makes logs more readable.
+For dev environment there is also installed `pino-prettier` which make easier to read provided logs.
 
 For logging server's traffic the `express-pino-logger` is used which has been attached to express server. Logging benchmarks reports can be accessed [here](https://github.com/pinojs/express-pino-logger#benchmarks)

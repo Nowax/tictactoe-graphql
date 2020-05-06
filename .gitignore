@@ -117,3 +117,5 @@ dist
 
 # Custome ignores
 build
+db.json
+.vscode

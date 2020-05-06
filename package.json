@@ -11,7 +11,10 @@
     "prettier:base": "prettier --parser typescript --single-quote",
     "prettier:check": "npm run prettier:base -- --list-different \"src/**/*.ts\"",
     "prettier:write": "npm run prettier:base -- --write \"src/**/*.ts\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate-typedefs": "npm run create-schema && npm run create-types",
+    "create-schema": "npx graphql-cli get-schema",
+    "create-types": "./node_modules/.bin/graphql-schema-typescript --namespace=GQL --global=true --typePrefix='' generate-ts --output=src/__typedefs/graphqlTypes.d.ts src/__typedefs"
   },
   "husky": {
     "hooks": {
@@ -27,14 +30,21 @@
   "author": "Wojciech Nowak",
   "license": "MIT",
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/compression": "^1.7.0",
     "@types/express": "^4.17.6",
-    "@types/graphql": "^14.5.0",
+    "@types/express-pino-logger": "^4.0.2",
+    "@types/graphql": "^14.0.0",
     "@types/graphql-depth-limit": "^1.1.2",
+    "@types/jsonwebtoken": "^8.3.9",
+    "@types/lowdb": "^1.0.8",
     "@types/node": "^13.13.4",
+    "@types/pino": "^6.0.0",
+    "@types/uuid": "^7.0.3",
+    "graphql": "^14.0.2",
     "graphql-depth-limit": "^1.1.0",
-    "graphql-import": "^1.0.2",
-    "graphql-import-node": "0.0.4",
+    "graphql-scalar-types": "^2.0.0",
+    "graphql-schema-typescript": "^1.3.2",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.0",
     "pino-pretty": "^4.0.0",
@@ -45,16 +55,18 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@types/express-pino-logger": "^4.0.2",
-    "@types/pino": "^6.0.0",
+    "apollo": "^2.3.1",
+    "apollo-server": "^2.3.3",
     "apollo-server-express": "^2.12.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-pino-logger": "^5.0.0",
-    "graphql": "^15.0.0",
     "http": "0.0.1-security",
+    "lodash": "^4.17.15",
+    "lowdb": "^1.0.0",
     "ncp": "^2.0.0",
-    "pino": "^6.2.1"
+    "pino": "^6.2.1",
+    "uuid": "^8.0.0"
   }
 }

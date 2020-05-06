@@ -3,7 +3,7 @@ import { GraphQLResponse, EndHandler } from 'graphql-extensions'
 import { Logger } from 'pino'
 import { Request } from 'apollo-server-env'
 
-interface Options {
+export interface Options {
   logger: Logger
 }
 
