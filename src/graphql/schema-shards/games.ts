@@ -10,6 +10,9 @@ const typeDefs = gql`
   extend type Mutation {
     " create a new game "
     createGame(input: InputCreateGame!): Game
+
+    " join the existing game "
+    joinGame(input: InputJoinGame!): PlayerToken
   }
 
   extend type Subscription {
@@ -19,19 +22,39 @@ const typeDefs = gql`
 
   " input to create a new game "
   input InputCreateGame {
-    type: String
+    type: GameType!
   }
 
   " input to join the existing game"
   input InputJoinGame {
-    gameID: ID
+    gameID: ID!
   }
 
   type Game {
     id: ID
-    userId: ID
-    text: String
+    type: GameType!
     timestamp: String
+
+    playerOneID: ID
+    playerTwoID: ID
+    status: GameStatus
+    latestMovePlayerID: ID
+    state: String
+  }
+
+  type PlayerToken {
+    id: ID
+  }
+
+  enum GameStatus {
+    NEW
+    STARTED
+    FINISHED
+  }
+
+  enum GameType {
+    SINGLEPLAYER
+    MULTIPLAYER
   }
 `
 
@@ -42,6 +65,7 @@ export const createGames = (srv: GameService) => ({
     },
     Mutation: {
       createGame: srv.createGame,
+      joinGame: srv.joinGame,
     },
     Subscription: {
       gameStateRefreshed: {

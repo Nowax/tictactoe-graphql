@@ -1,21 +1,36 @@
 # source: http://localhost:3000/graphql
-# timestamp: Wed May 06 2020 09:52:56 GMT+0200 (Central European Summer Time)
+# timestamp: Wed May 06 2020 19:30:16 GMT+0200 (Central European Summer Time)
 
 type Game {
   id: ID
-  userId: ID
-  text: String
+  type: GameType!
   timestamp: String
+  playerOneID: ID
+  playerTwoID: ID
+  status: GameStatus
+  latestMovePlayerID: ID
+  state: String
+}
+
+enum GameStatus {
+  NEW
+  STARTED
+  FINISHED
+}
+
+enum GameType {
+  SINGLEPLAYER
+  MULTIPLAYER
 }
 
 """ input to create a new game """
 input InputCreateGame {
-  type: String
+  type: GameType!
 }
 
 """ input to join the existing game"""
 input InputJoinGame {
-  gameID: ID
+  gameID: ID!
 }
 
 type Mutation {
@@ -23,6 +38,13 @@ type Mutation {
 
   """ create a new game """
   createGame(input: InputCreateGame!): Game
+
+  """ join the existing game """
+  joinGame(input: InputJoinGame!): PlayerToken
+}
+
+type PlayerToken {
+  id: ID
 }
 
 type Query {

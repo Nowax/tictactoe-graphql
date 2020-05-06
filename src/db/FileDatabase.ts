@@ -15,31 +15,14 @@ export class FileDatabase implements Database {
       })
       .write()
   }
-  joinGame = async (joinInput: GQL.InputJoinGame) => {
-    const { gameID } = joinInput
-    // @ts-ignore see README.md for details
-    const game = this.db.get('games').find({ gameID }).value()
 
-    if (!game) {
-      throw new Error('There is no such game')
-    }
-
-    const joinedGame: GQL.Game = {
-      ...game,
-      userId: createUUID(),
-    }
-    // @ts-ignore see README.md for details
-    this.db.get('games').push(joinedGame).write()
-    return joinedGame
-  }
-
-  getGames = async (): Promise<GQL.Game[]> => {
+  getGames = (): Promise<GQL.Game[]> => {
     // @ts-ignore see README.md for details
     return this.db.get('games').value()
   }
 
   createGame = async (gameInput: GQL.InputCreateGame): Promise<Partial<GQL.Game>> => {
-    const game = {
+    const game: GQL.Game = {
       ...gameInput,
       id: createUUID(),
       timestamp: new Date().toUTCString(),
@@ -49,7 +32,7 @@ export class FileDatabase implements Database {
     return game
   }
 
-  getGameById = async (id: string): Promise<GQL.Game> => {
+  getGameById = (id: string): Promise<GQL.Game> => {
     // @ts-ignore see README.md for details
     const game = this.db.get('games').find({ id }).value()
 
@@ -58,5 +41,10 @@ export class FileDatabase implements Database {
     }
 
     return game
+  }
+
+  updateGame = async (gameToUpdate: GQL.Game) => {
+    // @ts-ignore see README.md for details
+    const game = this.db.get('games').find({ id: gameToUpdate.id }).assign(gameToUpdate).write()
   }
 }
