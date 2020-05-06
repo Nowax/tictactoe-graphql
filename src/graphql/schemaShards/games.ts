@@ -42,7 +42,7 @@ export const games = {
       getGames: () => getGames(),
     },
     Mutation: {
-      createGame: async (_root: any, { input }: GQL.MutationToCreateGameArgs, context: any) => {
+      createGame: async (_root: any, { input }: GQL.MutationToCreateGameArgs, _context: any) => {
         const game = await createGame(input)
         pubsub.publish('gameStateRefreshed', {
           gameStateRefreshed: game,

@@ -11,7 +11,7 @@ db.defaults({
 
 export async function joinGame(joinInput: GQL.InputJoinGame) {
   const { gameID } = joinInput
-  // @ts-ignore
+  // @ts-ignore see README.md for details
   const game = db.get('games').find({ gameID }).value()
 
   if (!game) {
@@ -22,13 +22,13 @@ export async function joinGame(joinInput: GQL.InputJoinGame) {
     ...game,
     userId: createUUID(),
   }
-
+  // @ts-ignore see README.md for details
   db.get('games').push(joinedGame).write()
   return joinedGame
 }
 
 export async function getGames(): Promise<GQL.Game[]> {
-  // @ts-ignore
+  // @ts-ignore see README.md for details
   return db.get('games').value()
 }
 
@@ -38,6 +38,7 @@ export async function createGame(gameInput: GQL.InputCreateGame): Promise<Partia
     id: createUUID(),
     timestamp: new Date().toUTCString(),
   }
+  // @ts-ignore see README.md for details
   db.get('games').push(game).write()
   return game
 }

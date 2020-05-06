@@ -52,7 +52,44 @@ There is no authentication integrated with the app (even simple dummy token chec
 
 For development purpose `lowdb` databases has been used. This allow to create databases in json file. Database has got abstract interface so in production environment `lowdb` can be easily change to some more sophisticated solution.
 
+Disclaimer: There are problem with `lowdb` types that why `@tslint-ignore` has been used. In enterprise development it would require resolving this problem with proper type, e.g. implementing them explicitly.
+
 # Configuration
+
+## Docker
+
+Application has been dockerized with multi-stage docker's image approach. There are separate commands to build production or development images.
+
+For production use command:
+
+```bash
+npm run docker:prod
+```
+
+For production use command:
+
+```bash
+npm run docker:dev
+```
+
+To run created images as docker process use commands:
+
+```bash
+docker run -p 3000:3000 ttt-prod
+```
+
+for production and:
+
+```bash
+docker run -p 3000:3000 ttt-dev
+```
+
+for development image.
+
+Disclaimer: There is still place for improvement in production docker image:
+
+1. npm ci should install only production modules. This however requires some more tweaking with modules version.
+2. possibly smaller alpine image of node can be used as last build stage thank what we could reduce size in final production's image.
 
 ## Linters
 
