@@ -1,6 +1,5 @@
-import { createGame, getGames } from '../../db'
 import { gql } from 'apollo-server'
-import { pubsub } from '../subscriptionManager'
+import { GameService } from '../../services/GameService'
 
 const typeDefs = gql`
   extend type Query {
@@ -36,27 +35,19 @@ const typeDefs = gql`
   }
 `
 
-export const games = {
+export const createGames = (srv: GameService) => ({
   resolvers: {
     Query: {
-      getGames: () => getGames(),
+      getGames: srv.getGames,
     },
     Mutation: {
-      createGame: async (_root: any, { input }: GQL.MutationToCreateGameArgs, _context: any) => {
-        const game = await createGame(input)
-        pubsub.publish('gameStateRefreshed', {
-          gameStateRefreshed: game,
-        })
-        return game
-      },
+      createGame: srv.createGame,
     },
     Subscription: {
       gameStateRefreshed: {
-        subscribe: (_root: any, _args: any, _context: any) => {
-          return pubsub.asyncIterator('gameStateRefreshed')
-        },
+        subscribe: srv.subscribeToGameStateRefreshed,
       },
     },
   },
   typeDefs: [typeDefs],
-}
+})

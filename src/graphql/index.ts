@@ -1,5 +1,5 @@
 import { mergeRawSchemas } from './utils/mergeRawSchemas'
-import { schemaShards } from './schemaShards'
+import { schemaShards } from './schema-shards'
 import { gql } from 'apollo-server'
 
 export const rawSchema = mergeRawSchemas(

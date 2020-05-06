@@ -1,11 +1,9 @@
-import pino from 'pino'
-import { ServerFactory } from './server/serverFactory'
+import { ServerFactory } from './server/ServerFactory'
 import { ApolloBasicLogger } from './logging/ApolloBasicLogger'
 import { rawSchema } from './graphql'
+import { logger } from './logging/Logger'
 
 const PORT = process.env.PORT || 3000
-const LOG_LEVEL: string = process.env.LOG_LEVEL || 'info'
-const logger = pino({ level: LOG_LEVEL })
 
 const httpServer = new ServerFactory({
   logger,
