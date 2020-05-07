@@ -41,10 +41,6 @@ export class GameService {
   createGame = (_root: any, { input }: MutationToCreateGameArgs): Promise<Partial<GQLGame>> => {
     this.logger.debug('Starting handling createGame request')
 
-    if (input.type === GQLGameType.SINGLEPLAYER) {
-      throw new Error('Game not supports single player mode yet')
-    }
-
     const game: GQLGame = {
       ...input,
       stateHistory: ['.........'],
@@ -83,7 +79,27 @@ export class GameService {
   makeMove = async (_root: any, { input }: MutationToMakeMoveArgs): Promise<GQLGame> => {
     this.logger.debug('Starting handling makeMove request')
 
-    const game = await this.db.getGameById(input.gameID)
+    let game = await this.db.getGameById(input.gameID)
+
+    game = this.makePlayerMove(game, input)
+    game = this.tryMakeAIMove(game)
+
+    game.status =
+      game.winner === GQLWinnerType.NONE ? GQLGameStatus.STARTED : GQLGameStatus.FINISHED
+    this.db.updateGame(game)
+
+    pubsub.publish('gameStateRefreshed', {
+      gameStateRefreshed: game,
+    })
+    return game
+  }
+
+  subscribeToGameStateRefreshed = (): AsyncIterator<unknown, any, undefined> => {
+    this.logger.debug('Starting handling subscribeToGameStateRefreshed request')
+    return pubsub.asyncIterator('gameStateRefreshed')
+  }
+
+  private makePlayerMove = (game: GQLGame, input: GQLInputMakeMove): GQLGame => {
     const player = this.recognizePlayer(game, input)
 
     if (!this.canPerformMove(game)) {
@@ -100,24 +116,20 @@ export class GameService {
 
     game.winner = this.engine.evaluateWinner(input.newState)
     game.latestMovePlayerID = input.userID
-    game.status =
-      game.winner === GQLWinnerType.NONE ? GQLGameStatus.STARTED : GQLGameStatus.FINISHED
     game.stateHistory.push(input.newState)
-    this.db.updateGame(game)
 
-    pubsub.publish('gameStateRefreshed', {
-      gameStateRefreshed: game,
-    })
     return game
   }
 
-  subscribeToGameStateRefreshed = (
-    _root: any,
-    _args: any,
-    _context: any
-  ): AsyncIterator<unknown, any, undefined> => {
-    this.logger.debug('Starting handling subscribeToGameStateRefreshed request')
-    return pubsub.asyncIterator('gameStateRefreshed')
+  private tryMakeAIMove = (game: GQLGame): GQLGame => {
+    if (game.type === GQLGameType.SINGLEPLAYER && game.winner === GQLWinnerType.NONE) {
+      const newState = this.engine.makeValidAIMove(game.stateHistory)
+      this.logger.debug('New state from AI: ' + newState + ', game: ' + game.id)
+      game.winner = this.engine.evaluateWinner(newState)
+      game.latestMovePlayerID = 'AI'
+      game.stateHistory.push(newState)
+    }
+    return game
   }
 
   private recognizePlayer = (game: GQLGame, input: GQLInputMakeMove): GQLPlayer => {
@@ -141,6 +153,7 @@ export class GameService {
         game.playerO &&
         game.playerX &&
         game.type === GQLGameType.MULTIPLAYER) ||
+      (game.playerO && game.type === GQLGameType.SINGLEPLAYER) ||
       game.status === GQLGameStatus.STARTED
     )
   }

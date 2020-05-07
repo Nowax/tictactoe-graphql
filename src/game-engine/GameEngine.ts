@@ -23,6 +23,20 @@ export class GameEngine {
     return !isViolatingPreviousState && diff === validMarker
   }
 
+  makeValidAIMove = (stateHistory: string[]): string => {
+    const previousState: string = stateHistory[stateHistory.length - 1]
+    while (true) {
+      const index = Math.floor(Math.random() * 8)
+      if (previousState[index] === '.') {
+        return (
+          previousState.substr(0, index) +
+          'X' +
+          previousState.substr(index + 1, previousState.length)
+        )
+      }
+    }
+  }
+
   evaluateWinner = (state: string): GQLWinnerType => {
     for (let i = 0; i < 3; i++) {
       if (state[i] === state[i + 3] && state[i] === state[i + 6] && state[i] !== '.') {

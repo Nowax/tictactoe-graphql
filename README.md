@@ -44,6 +44,10 @@ It basically retrieves schema from graphql server and saves it to predefined pla
 
 Predefined configuration can be reached from file: `.graphqlconfig`
 
+## Functionality
+
+All required functionalities had been implemented. However, there is still need to improvement especially in AI part and part when it is used. `GameService` class requires some refactoring to make it less coupled to all game engine and business logic.
+
 ## Authentication
 
 There is no authentication integrated with the app (even simple dummy token checks). Reason: this approach simplifies app design.
