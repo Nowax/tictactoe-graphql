@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server'
+import { gql, withFilter } from 'apollo-server'
 import { GameService } from '../../services/GameService'
 
 const typeDefs = gql`
@@ -20,7 +20,7 @@ const typeDefs = gql`
 
   extend type Subscription {
     " called when a new move noticed in game "
-    gameStateRefreshed: GamePublicInfo
+    gameStateRefreshed(gameID: ID!): GamePublicInfo
   }
 
   " input to create a new game "
@@ -103,7 +103,9 @@ export const createGames = (srv: GameService) => ({
     },
     Subscription: {
       gameStateRefreshed: {
-        subscribe: srv.subscribeToGameStateRefreshed,
+        subscribe: withFilter(srv.subscribeToGameStateRefreshed, (payload, variables) => {
+          return payload.gameStateRefreshed.id === variables.gameID
+        }),
       },
     },
   },

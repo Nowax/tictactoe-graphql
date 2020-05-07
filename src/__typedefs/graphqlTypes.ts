@@ -288,7 +288,10 @@ export interface SubscriptionTo_emptyResolver<TParent = any, TResult = any> {
   subscribe: (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo) => AsyncIterator<TResult>;
 }
 
+export interface SubscriptionToGameStateRefreshedArgs {
+  gameID: string;
+}
 export interface SubscriptionToGameStateRefreshedResolver<TParent = any, TResult = any> {
-  resolve?: (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo) => TResult;
-  subscribe: (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo) => AsyncIterator<TResult>;
+  resolve?: (parent: TParent, args: SubscriptionToGameStateRefreshedArgs, context: any, info: GraphQLResolveInfo) => TResult;
+  subscribe: (parent: TParent, args: SubscriptionToGameStateRefreshedArgs, context: any, info: GraphQLResolveInfo) => AsyncIterator<TResult>;
 }
