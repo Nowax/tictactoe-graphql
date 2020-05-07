@@ -10,11 +10,7 @@ export class FileDatabase implements Database {
   constructor() {
     const adapter = new FileSync('db.json')
     this.db = low(adapter)
-    this.db
-      .defaults({
-        games: [],
-      })
-      .write()
+    this.db.defaults({ games: [] }).write()
   }
 
   getGames = (): Promise<GQLGame[]> => {

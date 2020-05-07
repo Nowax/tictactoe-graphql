@@ -148,13 +148,17 @@ export class GameService {
   }
 
   private canPerformMove = (game: GQLGame): boolean => {
-    return (
-      (game.status === GQLGameStatus.NEW &&
-        game.playerO &&
-        game.playerX &&
-        game.type === GQLGameType.MULTIPLAYER) ||
-      (game.playerO && game.type === GQLGameType.SINGLEPLAYER) ||
-      game.status === GQLGameStatus.STARTED
-    )
+    const isReadyToStartSinglePlayerGame =
+      game.status === GQLGameStatus.NEW && game.playerO && game.type === GQLGameType.SINGLEPLAYER
+
+    const isReadyToStartMultiPlayerGame =
+      game.status === GQLGameStatus.NEW &&
+      game.playerO &&
+      game.playerX &&
+      game.type === GQLGameType.MULTIPLAYER
+
+    const isGameAlreadyStarted = game.status === GQLGameStatus.STARTED
+
+    return isReadyToStartSinglePlayerGame || isReadyToStartMultiPlayerGame || isGameAlreadyStarted
   }
 }

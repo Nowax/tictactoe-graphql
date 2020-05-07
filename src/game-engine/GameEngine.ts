@@ -39,22 +39,18 @@ export class GameEngine {
 
   evaluateWinner = (state: string): GQLWinnerType => {
     for (let i = 0; i < 3; i++) {
-      if (state[i] === state[i + 3] && state[i] === state[i + 6] && state[i] !== '.') {
+      if (this.isVerticalWin(state, i)) {
         return this.matchWinner(state[i])
       }
     }
 
     for (let i = 0; i < 9; i += 3) {
-      if (state[i] === state[i + 1] && state[i] === state[i + 2] && state[i] !== '.') {
+      if (this.isHorizontalWin(state, i)) {
         return this.matchWinner(state[i])
       }
     }
 
-    if (state[0] === state[4] && state[0] === state[8] && state[0] !== '.') {
-      return this.matchWinner(state[4])
-    }
-
-    if (state[2] === state[4] && state[2] === state[6] && state[2] !== '.') {
+    if (this.isBackslashWin(state) || this.isSlashWin(state)) {
       return this.matchWinner(state[4])
     }
 
@@ -65,6 +61,22 @@ export class GameEngine {
     }
 
     return GQLWinnerType.DRAW
+  }
+
+  private isVerticalWin(state: string, i: number): boolean {
+    return state[i] === state[i + 3] && state[i] === state[i + 6] && state[i] !== '.'
+  }
+
+  private isHorizontalWin(state: string, i: number): boolean {
+    return state[i] === state[i + 1] && state[i] === state[i + 2] && state[i] !== '.'
+  }
+
+  private isBackslashWin(state: string): boolean {
+    return state[0] === state[4] && state[0] === state[8] && state[0] !== '.'
+  }
+
+  private isSlashWin(state: string): boolean {
+    return state[2] === state[4] && state[2] === state[6] && state[2] !== '.'
   }
 
   private matchWinner(mark: string): GQLWinnerType {

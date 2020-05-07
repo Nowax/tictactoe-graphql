@@ -12,5 +12,5 @@ const httpServer = new ServerFactory({
 }).create()
 
 httpServer.listen({ port: PORT }, (): void =>
-  logger.info(`\n🚀      GraphQL is now running on http://localhost:3000/graphql`)
+  logger.info(`\n🚀      GraphQL is now running on http://localhost:${PORT}/graphql`)
 )
