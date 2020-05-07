@@ -13,6 +13,7 @@ import {
   GQLPlayer,
   GQLInputMakeMove,
   GQLWinnerType,
+  QueryToGetGameArgs,
 } from '../__typedefs/graphqlTypes'
 import { GameEngine } from '../game-engine/GameEngine'
 
@@ -30,6 +31,11 @@ export class GameService {
   getGames = (): Promise<GQLGame[]> => {
     this.logger.debug('Starting handling getGames request')
     return this.db.getGames()
+  }
+
+  getGame = (_root: any, { gameID }: QueryToGetGameArgs): Promise<GQLGame> => {
+    this.logger.debug('Starting handling getGame request')
+    return this.db.getGameById(gameID)
   }
 
   createGame = (_root: any, { input }: MutationToCreateGameArgs): Promise<Partial<GQLGame>> => {

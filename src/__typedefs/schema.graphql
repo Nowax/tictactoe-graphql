@@ -1,5 +1,5 @@
 # source: http://localhost:3000/graphql
-# timestamp: Thu May 07 2020 16:21:21 GMT+0200 (Central European Summer Time)
+# timestamp: Thu May 07 2020 16:46:56 GMT+0200 (Central European Summer Time)
 
 type Game {
   id: ID
@@ -78,6 +78,9 @@ type Query {
 
   """ get all games """
   getGames: [GamePublicInfo]
+
+  """ get game """
+  getGame(gameID: ID!): GamePublicInfo
 }
 
 type Subscription {

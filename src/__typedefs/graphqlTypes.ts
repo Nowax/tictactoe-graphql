@@ -19,6 +19,11 @@ export interface GQLQuery {
    *  get all games 
    */
   getGames?: Array<GQLGamePublicInfo | null>;
+  
+  /**
+   *  get game 
+   */
+  getGame?: GQLGamePublicInfo;
 }
 
 export interface GQLGamePublicInfo {
@@ -142,6 +147,7 @@ export interface GQLResolver {
 export interface GQLQueryTypeResolver<TParent = any> {
   _empty?: QueryTo_emptyResolver<TParent>;
   getGames?: QueryToGetGamesResolver<TParent>;
+  getGame?: QueryToGetGameResolver<TParent>;
 }
 
 export interface QueryTo_emptyResolver<TParent = any, TResult = any> {
@@ -150,6 +156,13 @@ export interface QueryTo_emptyResolver<TParent = any, TResult = any> {
 
 export interface QueryToGetGamesResolver<TParent = any, TResult = any> {
   (parent: TParent, args: {}, context: any, info: GraphQLResolveInfo): TResult;
+}
+
+export interface QueryToGetGameArgs {
+  gameID: string;
+}
+export interface QueryToGetGameResolver<TParent = any, TResult = any> {
+  (parent: TParent, args: QueryToGetGameArgs, context: any, info: GraphQLResolveInfo): TResult;
 }
 
 export interface GQLGamePublicInfoTypeResolver<TParent = any> {

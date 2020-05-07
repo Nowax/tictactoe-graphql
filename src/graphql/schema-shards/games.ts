@@ -5,6 +5,9 @@ const typeDefs = gql`
   extend type Query {
     " get all games "
     getGames: [GamePublicInfo]
+
+    " get game "
+    getGame(gameID: ID!): GamePublicInfo
   }
 
   extend type Mutation {
@@ -95,6 +98,7 @@ export const createGames = (srv: GameService) => ({
   resolvers: {
     Query: {
       getGames: srv.getGames,
+      getGame: srv.getGame,
     },
     Mutation: {
       createGame: srv.createGame,
