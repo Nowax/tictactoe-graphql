@@ -1,6 +1,8 @@
+import { GQLGame } from '../__typedefs/graphqlTypes'
+
 export interface Database {
-  getGames(): Promise<GQL.Game[]>
-  getGameById(id: string): Promise<GQL.Game>
-  createGame(gameInput: GQL.InputCreateGame): Promise<Partial<GQL.Game>>
-  updateGame(gameToUpdate: GQL.Game): void
+  getGames(): Promise<GQLGame[]>
+  getGameById(id: string): Promise<GQLGame>
+  createGame(gameInput: GQLGame): Promise<Partial<GQLGame>>
+  updateGame(gameToUpdate: GQLGame): void
 }

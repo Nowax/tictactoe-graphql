@@ -56,6 +56,22 @@ Disclaimer: There are problem with `lowdb` types that why `@tslint-ignore` has b
 
 # Configuration
 
+## Testing
+
+For test `jest` framework has been used. Currently there are only UT for engine part. Integration test would be very helpful here, however because of lack of time (deadline not negotiable again) it had to be skipped.
+
+To run test call command:
+
+```bash
+npn run test
+```
+
+alternatively:
+
+```bash
+npn run test:watch
+```
+
 ## Docker
 
 Application has been dockerized with multi-stage docker's image approach. There are separate commands to build production or development images.

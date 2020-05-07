@@ -1,15 +1,25 @@
 # source: http://localhost:3000/graphql
-# timestamp: Wed May 06 2020 19:30:16 GMT+0200 (Central European Summer Time)
+# timestamp: Thu May 07 2020 15:32:05 GMT+0200 (Central European Summer Time)
 
 type Game {
   id: ID
   type: GameType!
   timestamp: String
-  playerOneID: ID
-  playerTwoID: ID
-  status: GameStatus
+  winner: WinnerType
+  stateHistory: [String!]!
+  status: GameStatus!
+  playerX: Player
+  playerO: Player
   latestMovePlayerID: ID
-  state: String
+}
+
+type GamePublicInfo {
+  id: ID
+  type: GameType!
+  timestamp: String
+  winner: WinnerType
+  stateHistory: [String!]!
+  status: GameStatus!
 }
 
 enum GameStatus {
@@ -33,6 +43,18 @@ input InputJoinGame {
   gameID: ID!
 }
 
+""" input to make move in existing game """
+input InputMakeMove {
+  gameID: ID!
+  userID: ID!
+  newState: String!
+}
+
+enum MarkType {
+  X
+  O
+}
+
 type Mutation {
   _empty: String
 
@@ -40,23 +62,34 @@ type Mutation {
   createGame(input: InputCreateGame!): Game
 
   """ join the existing game """
-  joinGame(input: InputJoinGame!): PlayerToken
+  joinGame(input: InputJoinGame!): Player
+
+  """ make move in specific game """
+  makeMove(input: InputMakeMove!): GamePublicInfo
 }
 
-type PlayerToken {
-  id: ID
+type Player {
+  id: ID!
+  mark: MarkType!
 }
 
 type Query {
   _empty: String
 
   """ get all games """
-  getGames: [Game]
+  getGames: [GamePublicInfo]
 }
 
 type Subscription {
   _empty: String
 
   """ called when a new move noticed in game """
-  gameStateRefreshed: Game
+  gameStateRefreshed: GamePublicInfo
+}
+
+enum WinnerType {
+  NONE
+  Xs
+  Os
+  DRAW
 }

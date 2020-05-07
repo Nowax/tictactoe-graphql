@@ -4,7 +4,7 @@ import { GameService } from '../../services/GameService'
 const typeDefs = gql`
   extend type Query {
     " get all games "
-    getGames: [Game]
+    getGames: [GamePublicInfo]
   }
 
   extend type Mutation {
@@ -12,12 +12,15 @@ const typeDefs = gql`
     createGame(input: InputCreateGame!): Game
 
     " join the existing game "
-    joinGame(input: InputJoinGame!): PlayerToken
+    joinGame(input: InputJoinGame!): Player
+
+    " make move in specific game "
+    makeMove(input: InputMakeMove!): GamePublicInfo
   }
 
   extend type Subscription {
     " called when a new move noticed in game "
-    gameStateRefreshed: Game
+    gameStateRefreshed: GamePublicInfo
   }
 
   " input to create a new game "
@@ -30,20 +33,50 @@ const typeDefs = gql`
     gameID: ID!
   }
 
+  " input to make move in existing game "
+  input InputMakeMove {
+    gameID: ID!
+    userID: ID!
+    newState: String!
+  }
+
   type Game {
     id: ID
     type: GameType!
     timestamp: String
+    winner: WinnerType
+    stateHistory: [String!]!
+    status: GameStatus!
 
-    playerOneID: ID
-    playerTwoID: ID
-    status: GameStatus
+    playerX: Player
+    playerO: Player
     latestMovePlayerID: ID
-    state: String
   }
 
-  type PlayerToken {
+  type GamePublicInfo {
     id: ID
+    type: GameType!
+    timestamp: String
+    winner: WinnerType
+    stateHistory: [String!]!
+    status: GameStatus!
+  }
+
+  type Player {
+    id: ID!
+    mark: MarkType!
+  }
+
+  enum WinnerType {
+    NONE
+    Xs
+    Os
+    DRAW
+  }
+
+  enum MarkType {
+    X
+    O
   }
 
   enum GameStatus {
@@ -66,6 +99,7 @@ export const createGames = (srv: GameService) => ({
     Mutation: {
       createGame: srv.createGame,
       joinGame: srv.joinGame,
+      makeMove: srv.makeMove,
     },
     Subscription: {
       gameStateRefreshed: {
